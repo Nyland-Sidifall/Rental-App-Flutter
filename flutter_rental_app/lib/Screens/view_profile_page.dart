@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
+import 'package:flutterrentalapp/Views/form_widgets.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
@@ -122,6 +123,10 @@ class _view_profile_page_state extends State<view_profile_page> {
                     fontSize: 25.0,
                   ),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:20.0),
+                child: review_form(),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
