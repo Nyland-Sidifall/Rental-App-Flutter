@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
 import 'package:flutterrentalapp/Screens/personal_info_page.dart';
+import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 
@@ -35,7 +36,9 @@ class _account_page_state extends State<account_page> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                      Navigator.pushNamed(context, view_profile_page.routeName);
+                  },
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
                     radius: MediaQuery.of(context).size.width/9.5,

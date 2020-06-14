@@ -6,6 +6,7 @@ import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
 import 'package:flutterrentalapp/Screens/personal_info_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
+import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         signup_page.routeName: (context) => signup_page(),
         guest_home_page.routeName: (context) => guest_home_page(),
         personal_info_page.routeName: (context) => personal_info_page(),
+        view_profile_page.routeName:(context) => view_profile_page(),
       },
     );
   }
