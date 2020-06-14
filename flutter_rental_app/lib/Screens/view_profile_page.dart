@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
+import 'package:flutterrentalapp/Views/list_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 class view_profile_page extends StatefulWidget {
@@ -124,7 +125,16 @@ class _view_profile_page_state extends State<view_profile_page> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: Container(),
+                child: ListView.builder(
+                  itemCount: 2,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top:10.0,bottom:10.0),
+                      child: ReviewListTile(),
+                    );
+                  },
+                ),
               ),
             ],
           ),
