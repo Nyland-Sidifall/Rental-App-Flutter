@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Screens/guest_home_page.dart';
+import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 
 class signup_page extends StatefulWidget {
@@ -12,18 +14,18 @@ class signup_page extends StatefulWidget {
   _signup_page_state createState() => _signup_page_state();
 }
 
+
 class _signup_page_state extends State<signup_page> {
+
+  void _signUp(){
+    Navigator.pushNamed(context, guest_home_page.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Sign Up Page',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
+        title: AppBarText(text: 'Sign Up Page'),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -105,7 +107,9 @@ class _signup_page_state extends State<signup_page> {
                 Padding(
                   padding: const EdgeInsets.only(top:40.0, bottom:40.0,),
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _signUp();
+                    },
                     child: Text(
                       'Submit',
                       style: TextStyle(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         //For connecting multiple scenes together to the main page
         login_page.routeName: (context) => login_page(),
         signup_page.routeName: (context) => signup_page(),
+        guest_home_page.routeName: (context) => guest_home_page(),
       },
     );
   }

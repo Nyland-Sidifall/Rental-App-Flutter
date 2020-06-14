@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
 
 
@@ -17,6 +18,10 @@ class _login_page_state extends State<login_page> {
 
   void _signUp(){
     Navigator.pushNamed(context, signup_page.routeName);
+  }
+
+  void _logIn(){
+    Navigator.pushNamed(context, guest_home_page.routeName);
   }
 
   @override
@@ -67,7 +72,9 @@ class _login_page_state extends State<login_page> {
               Padding(
                 padding: const EdgeInsets.only(top:30.0),
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _logIn();
+                  },
                   child: Text(
                     'Login',
                     style: TextStyle(
