@@ -14,8 +14,29 @@ class explore_page extends StatefulWidget {
 class _explore_page_state extends State<explore_page> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Explore Page'),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(25, 50, 20, 0),
+      child: Column(
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Search',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 2.0,
+                ),
+              ),
+              contentPadding: EdgeInsets.all(5.0)
+            ),
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
