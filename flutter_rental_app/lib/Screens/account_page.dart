@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
+import 'package:flutterrentalapp/Screens/personal_info_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 
@@ -73,7 +74,9 @@ class _account_page_state extends State<account_page> {
             children: <Widget>[
               MaterialButton(
                 height: MediaQuery.of(context).size.height/9.0,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, personal_info_page.routeName);
+                },
                 child: AccountPageListTile(text: 'Personal Information', iconData: Icons.person),
               ),
               MaterialButton(

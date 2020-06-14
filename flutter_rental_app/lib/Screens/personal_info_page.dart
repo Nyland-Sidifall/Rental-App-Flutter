@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 
-class signup_page extends StatefulWidget {
+class personal_info_page extends StatefulWidget {
 
-  static final String routeName = '/signupPageRoute';
+  static final String routeName = '/personalInfoPageRoute';
 
-  signup_page({Key key}) : super(key: key);
+  personal_info_page({Key key}) : super(key: key);
 
   @override
-  _signup_page_state createState() => _signup_page_state();
+  _personal_info_page_state createState() => _personal_info_page_state();
 }
 
 
-class _signup_page_state extends State<signup_page> {
+class _personal_info_page_state extends State<personal_info_page> {
 
-  void _signUp(){
+  void _saveInfo(){
     Navigator.pushNamed(context, guest_home_page.routeName);
   }
 
@@ -25,7 +24,13 @@ class _signup_page_state extends State<signup_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppBarText(text: 'Sign Up Page'),
+        title: AppBarText(text: 'Personal Information'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save, color: Colors.white),
+            onPressed: _saveInfo,
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -34,13 +39,6 @@ class _signup_page_state extends State<signup_page> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  "Tell us about you",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
                 Form(
                   child: Column(
                     children: <Widget>[
@@ -60,6 +58,28 @@ class _signup_page_state extends State<signup_page> {
                         child: TextFormField(
                           decoration: InputDecoration(
                               labelText: "Last Name"
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Email"
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Password"
                           ),
                           style: TextStyle(
                             fontSize: 25.0,
@@ -103,26 +123,17 @@ class _signup_page_state extends State<signup_page> {
                     ],
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.only(top:40.0, bottom:40.0,),
                   child: MaterialButton(
-                    onPressed: () {
-                      _signUp();
-                    },
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25.0,
-                        color: Colors.black,
+                    onPressed: () {},
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: MediaQuery.of(context).size.width/4.8,
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/profile.png'),
+                        radius: MediaQuery.of(context).size.width/5,
                       ),
-                    ),
-                    color: Colors.blue,
-                    height: MediaQuery.of(context).size.height/15,
-                    minWidth: double.infinity,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
                     ),
                   ),
                 ),

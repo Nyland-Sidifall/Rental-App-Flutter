@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
+import 'package:flutterrentalapp/Screens/personal_info_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
 
 void main() {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         login_page.routeName: (context) => login_page(),
         signup_page.routeName: (context) => signup_page(),
         guest_home_page.routeName: (context) => guest_home_page(),
+        personal_info_page.routeName: (context) => personal_info_page(),
       },
     );
   }
