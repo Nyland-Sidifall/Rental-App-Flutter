@@ -14,8 +14,44 @@ class trips_page extends StatefulWidget {
 class _trips_page_state extends State<trips_page> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Trips Page'),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top:25),
+              child: Text(
+                'Upcoming Trips',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top:15, bottom:25),
+              child: Container(
+                height: MediaQuery.of(context).size.height/3,
+              ),
+            ),
+            Text(
+              'Previous Trips',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top:15, bottom:25),
+              child: Container(
+                height: MediaQuery.of(context).size.height/3,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
