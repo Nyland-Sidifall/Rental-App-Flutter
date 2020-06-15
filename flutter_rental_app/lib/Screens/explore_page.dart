@@ -19,7 +19,7 @@ class _explore_page_state extends State<explore_page> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom:50.0),
+              padding: const EdgeInsets.only(top: 10, bottom:50.0),
               child: TextField(
                 decoration: InputDecoration(
                     hintText: 'Search',
@@ -38,6 +38,7 @@ class _explore_page_state extends State<explore_page> {
               ),
             ),
             GridView.builder(
+              physics: ScrollPhysics(),
               shrinkWrap: true,
               itemCount: 3,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
