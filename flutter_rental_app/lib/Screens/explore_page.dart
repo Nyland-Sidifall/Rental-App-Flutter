@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Screens/view_posting_page.dart';
 import 'package:flutterrentalapp/Views/grid_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
@@ -48,7 +49,16 @@ class _explore_page_state extends State<explore_page> {
                 childAspectRatio: 3/4,
               ),
               itemBuilder: (context, index) {
-                return posting_grid_tile();
+                return InkResponse(
+                  enableFeedback: true,
+                  child: posting_grid_tile(),
+                  onTap: (){
+                    Navigator.pushNamed(
+                      context,
+                      view_posting_page.routeName,
+                    );
+                  },
+                );
               },
             ),
           ],

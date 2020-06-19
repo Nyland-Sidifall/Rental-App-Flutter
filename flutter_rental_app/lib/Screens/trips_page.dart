@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Views/grid_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
+import 'package:flutterrentalapp/Screens/view_posting_page.dart';
+
 
 
 class trips_page extends StatefulWidget {
@@ -44,7 +46,16 @@ class _trips_page_state extends State<trips_page> {
                       padding: const EdgeInsets.only(right:15.0),
                       child: Container(
                           width: MediaQuery.of(context).size.width/2.5,
-                          child: trip_grid_tile()
+                          child: InkResponse(
+                            enableFeedback: true,
+                            child: trip_grid_tile(),
+                            onTap: (){
+                              Navigator.pushNamed(
+                                context,
+                                view_posting_page.routeName,
+                              );
+                            },
+                          ),
                       ),
                     );
                   },
@@ -71,7 +82,16 @@ class _trips_page_state extends State<trips_page> {
                       padding: const EdgeInsets.only(right:15.0),
                       child: Container(
                           width: MediaQuery.of(context).size.width/2.5,
-                          child: trip_grid_tile()
+                          child: InkResponse(
+                            enableFeedback: true,
+                            child: trip_grid_tile(),
+                            onTap: (){
+                              Navigator.pushNamed(
+                                context,
+                                view_posting_page.routeName,
+                              );
+                            },
+                          ),
                       ),
                     );
                   },

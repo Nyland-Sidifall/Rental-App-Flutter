@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Views/grid_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
+import 'package:flutterrentalapp/Screens/view_posting_page.dart';
 
 
 class saved_page extends StatefulWidget {
-
   saved_page({Key key}) : super(key: key);
 
   @override
@@ -13,7 +13,6 @@ class saved_page extends StatefulWidget {
 }
 
 class _saved_page_state extends State<saved_page> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,32 +25,42 @@ class _saved_page_state extends State<saved_page> {
           crossAxisCount: 2,
           crossAxisSpacing: 15,
           mainAxisSpacing: 15,
-          childAspectRatio: 3/4,
+          childAspectRatio: 3 / 4,
         ),
         itemBuilder: (context, index) {
-          return Stack(
-              children: [
-                posting_grid_tile(),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right:10.0),
-                    child: Container(
-                      width: 30,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.clear,color: Colors.black,),
-                      ),
+          return Stack(children: [
+            InkResponse(
+              enableFeedback: true,
+              child: posting_grid_tile(),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  view_posting_page.routeName,
+                );
+              },
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Container(
+                  width: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: IconButton(
+                    onPressed: () {},
+                    padding: EdgeInsets.all(0),
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.black,
                     ),
                   ),
                 ),
-          ]
-          );
+              ),
+            ),
+          ]);
         },
       ),
     );
