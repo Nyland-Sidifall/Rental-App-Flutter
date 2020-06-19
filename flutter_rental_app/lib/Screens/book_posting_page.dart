@@ -42,11 +42,11 @@ class _book_posting_page_state extends State<book_posting_page> {
               ],
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 1.8,
+              height: MediaQuery.of(context).size.height / 2,
               child: PageView.builder(
-                itemCount: 13,
+                itemCount: 12,
                 itemBuilder: (context, index) {
-                  return calendar_month_widget();
+                  return calendar_month_widget(monthIndex: index);
                 },
               ),
             ),
