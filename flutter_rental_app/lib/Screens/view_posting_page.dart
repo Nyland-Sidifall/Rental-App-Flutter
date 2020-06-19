@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/form_widgets.dart';
+import 'package:flutterrentalapp/Views/list_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class view_posting_page extends StatefulWidget {
   static final String routeName = '/signupPageRoute';
@@ -15,8 +19,21 @@ class view_posting_page extends StatefulWidget {
 }
 
 class _view_posting_page_state extends State<view_posting_page> {
-  void _signUp() {
-    Navigator.pushNamed(context, guest_home_page.routeName);
+  List<String> _amenities = [
+    'Hair Dryer',
+    'Dishwasher',
+    'Iron',
+    'Wifi',
+    'Garage',
+  ];
+
+  LatLng _centerLatLong = LatLng(49.2827, -123.1207);
+  Completer<GoogleMapController> _completer;
+
+  @override
+  void initState() {
+    _completer = Completer();
+    super.initState();
   }
 
   @override
@@ -48,6 +65,7 @@ class _view_posting_page_state extends State<view_posting_page> {
             Padding(
               padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,15 +87,6 @@ class _view_posting_page_state extends State<view_posting_page> {
                               maxLines: 2,
                             ),
                           ),
-                          /*Padding(
-                            padding: const EdgeInsets.only(top: 7.0),
-                            child: Text(
-                              'Apartment',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                              ),
-                            ),
-                          ),*/
                         ],
                       ),
                       Column(
@@ -141,24 +150,119 @@ class _view_posting_page_state extends State<view_posting_page> {
                       ],
                     ),
                   ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      posting_info_tile(
-                        icon: Icon(Icons.home),
-                        category: 'Apartment',
-                        categoryInfo: '2 guests',
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        posting_info_tile(
+                          iconData: Icons.home,
+                          category: 'Apartment',
+                          categoryInfo: '2 guests',
+                        ),
+                        posting_info_tile(
+                          iconData: Icons.hotel,
+                          category: '1 Bedroom',
+                          categoryInfo: '1 King',
+                        ),
+                        posting_info_tile(
+                          iconData: Icons.wc,
+                          category: '1 Bathroom',
+                          categoryInfo: '1 Full',
+                        ),
+                      ],
+                    ),
                   ),
                   Text(""),
-                  Text('Amenitites'),
-                  //GridView.count(crossAxisCount: null),
-                  Text('Location'),
-                  Container(),
-                  Text('Reviews'),
-                  review_form(),
-                  //ListView.builder(itemBuilder: null),
+                  Text(
+                    'Amenitites',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0, bottom: 25),
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      childAspectRatio: 4 / 1,
+                      children: List.generate(
+                        _amenities.length,
+                        (index) {
+                          return Text(
+                            _amenities[index],
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Location',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25.0, bottom: 25),
+                    child: Text(
+                      '1111 FakeAddy, Fake City, Country.jpg',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: GoogleMap(
+                        onMapCreated: (controller){
+                          _completer.complete(controller);
+                        },
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                            target: _centerLatLong,
+                            zoom: 14,
+                        ),
+                        markers: <Marker>{
+                          Marker(
+                            markerId: MarkerId('Home Location'),
+                            position: _centerLatLong,
+                            icon: BitmapDescriptor.defaultMarker,
+                          ),
+                        },
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Reviews',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:20.0),
+                    child: review_form(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: ListView.builder(
+                      itemCount: 2,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top:10.0,bottom:10.0),
+                          child: ReviewListTile(),
+                        );
+                      },
+                    ),
+                  ),                  //ListView.builder(itemBuilder: null),
                 ],
               ),
             ),
@@ -170,16 +274,19 @@ class _view_posting_page_state extends State<view_posting_page> {
 }
 
 class posting_info_tile extends StatelessWidget {
-  final Icon icon;
+  final IconData iconData;
   final String category;
   final String categoryInfo;
 
-  posting_info_tile({Key key, this.icon, this.category, this.categoryInfo});
+  posting_info_tile({Key key, this.iconData, this.category, this.categoryInfo});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: icon,
+      leading: Icon(
+        this.iconData,
+        size: 30,
+      ),
       title: Text(
         category,
         style: TextStyle(
