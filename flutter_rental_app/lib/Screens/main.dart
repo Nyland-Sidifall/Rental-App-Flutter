@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Screens/book_posting_page.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
 import 'package:flutterrentalapp/Screens/personal_info_page.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         personal_info_page.routeName: (context) => personal_info_page(),
         view_profile_page.routeName:(context) => view_profile_page(),
         view_posting_page.routeName:(context) => view_posting_page(),
+        book_posting_page.routeName:(context) => book_posting_page(),
       },
     );
   }

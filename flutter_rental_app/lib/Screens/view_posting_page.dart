@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterrentalapp/Models/AppConstants.dart';
-import 'package:flutterrentalapp/Screens/guest_home_page.dart';
+import 'package:flutterrentalapp/Screens/book_posting_page.dart';
+import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 import 'package:flutterrentalapp/Views/form_widgets.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class view_posting_page extends StatefulWidget {
-  static final String routeName = '/signupPageRoute';
+  static final String routeName = '/viewPostingRoute';
 
   view_posting_page({Key key}) : super(key: key);
 
@@ -93,7 +93,12 @@ class _view_posting_page_state extends State<view_posting_page> {
                         children: <Widget>[
                           MaterialButton(
                             color: Colors.redAccent,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context,
+                                  book_posting_page.routeName,
+                              );
+                            },
                             child: Text(
                               'Book Now',
                               style: TextStyle(color: Colors.white),
@@ -127,13 +132,21 @@ class _view_posting_page_state extends State<view_posting_page> {
                         ),
                         Column(
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: MediaQuery.of(context).size.width / 12.5,
-                              backgroundColor: Colors.black,
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pushNamed(
+                                  context,
+                                  view_profile_page.routeName,
+                                );
+                              },
                               child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/profile.png'),
-                                radius: MediaQuery.of(context).size.width / 13,
+                                radius: MediaQuery.of(context).size.width / 12.5,
+                                backgroundColor: Colors.black,
+                                child: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('assets/images/profile.png'),
+                                  radius: MediaQuery.of(context).size.width / 13,
+                                ),
                               ),
                             ),
                             Padding(
