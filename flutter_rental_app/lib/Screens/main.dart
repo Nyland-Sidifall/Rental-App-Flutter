@@ -5,6 +5,7 @@ import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/book_posting_page.dart';
 import 'package:flutterrentalapp/Screens/conversation_page.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
+import 'package:flutterrentalapp/Screens/host_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
 import 'package:flutterrentalapp/Screens/personal_info_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         view_posting_page.routeName:(context) => view_posting_page(),
         book_posting_page.routeName:(context) => book_posting_page(),
         conversation_page.routeName:(context) => conversation_page(),
+        host_home_page.routeName:(context) => host_home_page(),
       },
     );
   }

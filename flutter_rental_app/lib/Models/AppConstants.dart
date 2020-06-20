@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppConstants{
 
+  static bool isHosting = false;
+
+
   static final String appName = 'Hotel Hunter';
   static final String googleMapsAPIKey = 'AIzaSyCZAqkBsl4GqbroLv1mGaSW11pmULP9Y3g';
 
