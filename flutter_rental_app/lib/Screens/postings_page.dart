@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Views/list_widgets.dart';
 
 
 
@@ -12,6 +13,28 @@ class postings_page extends StatefulWidget {
 class _postings_page_state extends State<postings_page> {
   @override
   Widget build(BuildContext context) {
-    return Text('postings page');
+    return Padding(
+      padding: const EdgeInsets.only(top: 25),
+      child: ListView.builder(
+        itemCount: 3,
+          itemBuilder: (context,index){
+
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(25,0,25,25),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                  child: index == 2 ? create_posting_list_tile() : my_posting_list_tile()
+              ),
+            );
+          }
+      ),
+    );
   }
+
 }

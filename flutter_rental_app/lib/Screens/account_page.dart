@@ -9,9 +9,7 @@ import 'package:flutterrentalapp/Screens/personal_info_page.dart';
 import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
-
 class account_page extends StatefulWidget {
-
   account_page({Key key}) : super(key: key);
 
   @override
@@ -19,32 +17,37 @@ class account_page extends StatefulWidget {
 }
 
 class _account_page_state extends State<account_page> {
-
   String _hostingTitle = 'To Host Dashboard';
 
-  void _changeHosting(){
-    String routeName = AppConstants.isHosting ? guest_home_page.routeName : host_home_page.routeName;
-    AppConstants.isHosting = true;
-    Navigator.pushNamed(
+  void _changeHosting() {
+    if (AppConstants.isHosting) {
+      AppConstants.isHosting = false;
+      Navigator.pushNamed(
         context,
-        routeName,
-    );
+        guest_home_page.routeName,
+      );
+    } else {
+      AppConstants.isHosting = true;
+      Navigator.pushNamed(
+        context,
+        host_home_page.routeName,
+      );
+    }
   }
 
-  void _logOut(){
+  void _logOut() {
     Navigator.pushNamed(context, login_page.routeName);
   }
 
-
   @override
   void initState() {
-    if(AppConstants.isHosting){
+    if (AppConstants.isHosting) {
       _hostingTitle = 'To Guest Dashboard';
+    }else{
+      _hostingTitle = 'To Host Dashboard';
     }
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +64,14 @@ class _account_page_state extends State<account_page> {
               children: <Widget>[
                 MaterialButton(
                   onPressed: () {
-                      Navigator.pushNamed(context, view_profile_page.routeName);
+                    Navigator.pushNamed(context, view_profile_page.routeName);
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    radius: MediaQuery.of(context).size.width/9.5,
+                    radius: MediaQuery.of(context).size.width / 9.5,
                     child: CircleAvatar(
                       backgroundImage: AssetImage('assets/images/profile.png'),
-                      radius: MediaQuery.of(context).size.width/10,
+                      radius: MediaQuery.of(context).size.width / 10,
                     ),
                   ),
                 ),
@@ -100,25 +103,27 @@ class _account_page_state extends State<account_page> {
             shrinkWrap: true,
             children: <Widget>[
               MaterialButton(
-                height: MediaQuery.of(context).size.height/9.0,
+                height: MediaQuery.of(context).size.height / 9.0,
                 onPressed: () {
                   Navigator.pushNamed(context, personal_info_page.routeName);
                 },
-                child: AccountPageListTile(text: 'Personal Information', iconData: Icons.person),
+                child: AccountPageListTile(
+                    text: 'Personal Information', iconData: Icons.person),
               ),
               MaterialButton(
-                height: MediaQuery.of(context).size.height/9.0,
+                height: MediaQuery.of(context).size.height / 9.0,
                 onPressed: () {
                   _changeHosting();
                 },
-                child: AccountPageListTile(text: _hostingTitle, iconData: Icons.hotel),
+                child: AccountPageListTile(
+                    text: _hostingTitle, iconData: Icons.hotel),
               ),
               MaterialButton(
-                height: MediaQuery.of(context).size.height/9.0,
+                height: MediaQuery.of(context).size.height / 9.0,
                 onPressed: () {
                   _logOut();
                 },
-                child: AccountPageListTile(text: 'Log Out', iconData:  null),
+                child: AccountPageListTile(text: 'Log Out', iconData: null),
               ),
             ],
           ),
@@ -126,19 +131,16 @@ class _account_page_state extends State<account_page> {
       ),
     );
   }
-
 }
 
-class AccountPageListTile extends StatelessWidget{
-
-  AccountPageListTile({Key key, this.text, this.iconData}) : super(key:key);
+class AccountPageListTile extends StatelessWidget {
+  AccountPageListTile({Key key, this.text, this.iconData}) : super(key: key);
 
   final String text;
   final IconData iconData;
 
   @override
   Widget build(BuildContext context) {
-
     return ListTile(
       contentPadding: EdgeInsets.all(0.0),
       leading: Text(
@@ -154,5 +156,4 @@ class AccountPageListTile extends StatelessWidget{
       ),
     );
   }
-  
 }
