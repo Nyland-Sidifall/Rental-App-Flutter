@@ -58,3 +58,49 @@ class _ReviewListTileState extends State<ReviewListTile>{
     );
   }
 }
+
+class conversation_list_tile extends StatefulWidget{
+
+  conversation_list_tile({Key key}): super (key:key);
+
+  @override
+  _conversation_list_tile_state createState() => _conversation_list_tile_state();
+
+}
+
+class _conversation_list_tile_state extends State<conversation_list_tile>{
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: AssetImage('assets/images/profile.png'),
+        radius: MediaQuery.of(context).size.width/13.0,
+      ),
+      title: Text(
+        'Kevin',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 22.5,
+        ),
+      ),
+      subtitle: Text(
+        'Hey! How\'s it goin fam?!',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+        ),
+      ),
+      trailing: Text(
+        'August 30th',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 15,
+        ),
+      ),
+      contentPadding: EdgeInsets.fromLTRB(25,15,25,15),
+    );
+  }
+
+
+}
