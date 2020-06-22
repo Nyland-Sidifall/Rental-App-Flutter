@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/book_posting_page.dart';
 import 'package:flutterrentalapp/Screens/conversation_page.dart';
+import 'package:flutterrentalapp/Screens/create_posting_page.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/host_home_page.dart';
 import 'package:flutterrentalapp/Screens/login_page.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         book_posting_page.routeName:(context) => book_posting_page(),
         conversation_page.routeName:(context) => conversation_page(),
         host_home_page.routeName:(context) => host_home_page(),
+        create_posting_page.routeName:(context) => create_posting_page(),
       },
     );
   }
