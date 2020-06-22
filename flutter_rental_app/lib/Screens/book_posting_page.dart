@@ -14,7 +14,7 @@ class book_posting_page extends StatefulWidget {
 
 class _book_posting_page_state extends State<book_posting_page> {
   void _signUp() {
-    Navigator.pushNamed(context, guest_home_page.routeName);
+    Navigator.pushNamed(context, book_posting_page.routeName);
   }
 
   @override
