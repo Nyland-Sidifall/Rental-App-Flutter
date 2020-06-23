@@ -9,8 +9,11 @@ class Contact{
   AssetImage displayImage;
 
   Contact({this.firstName = "", this.lastName="", this.imagePath=""}){
-    this.fullName = this.firstName +" "+this.lastName;
     this.displayImage = AssetImage(this.imagePath);
+  }
+
+  String getFullName(){
+    return this.fullName = this.firstName +" "+this.lastName;
   }
 
   User createUserFromContact(){
