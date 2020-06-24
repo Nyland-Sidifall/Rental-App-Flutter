@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Models/user_objects.dart';
 
 class AppConstants{
 
-  static bool isHosting = false;
 
 
   static final String appName = 'Hotel Hunter';
   static final String googleMapsAPIKey = 'AIzaSyCZAqkBsl4GqbroLv1mGaSW11pmULP9Y3g';
+
+  static User currentUser;
+  static bool isHosting = false;
+
 
   static final Color selectedIcon = Colors.deepOrange;
   static final Color nonselectedIcon = Colors.black;
