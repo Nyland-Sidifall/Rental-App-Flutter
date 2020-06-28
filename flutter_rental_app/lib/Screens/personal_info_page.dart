@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
@@ -16,8 +17,28 @@ class personal_info_page extends StatefulWidget {
 
 class _personal_info_page_state extends State<personal_info_page> {
 
+  TextEditingController _firstNameController;
+  TextEditingController _emailController;
+  TextEditingController _lastNameController;
+  TextEditingController _cityController;
+  TextEditingController _countryController;
+  TextEditingController _bioController;
+
+
   void _saveInfo(){
     Navigator.pushNamed(context, guest_home_page.routeName);
+  }
+
+  @override
+  void initState() {
+    _firstNameController = TextEditingController(text: AppConstants.currentUser.firstName);
+    _lastNameController = TextEditingController(text: AppConstants.currentUser.lastName);
+    _emailController = TextEditingController(text: AppConstants.currentUser.email);
+    _cityController = TextEditingController(text: AppConstants.currentUser.city);
+    _countryController = TextEditingController(text: AppConstants.currentUser.country);
+    _bioController = TextEditingController(text: AppConstants.currentUser.bio);
+
+    super.initState();
   }
 
   @override
@@ -51,6 +72,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _firstNameController,
                         ),
                       ),
                       Padding(
@@ -62,6 +84,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _lastNameController,
                         ),
                       ),
                       Padding(
@@ -73,6 +96,8 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          enabled: false,
+                          controller: _emailController,
                         ),
                       ),
                       Padding(
@@ -84,6 +109,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          enabled: false,
                         ),
                       ),
                       Padding(
@@ -95,6 +121,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _cityController,
                         ),
                       ),
                       Padding(
@@ -106,6 +133,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _countryController,
                         ),
                       ),
                       Padding(
@@ -118,6 +146,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                             fontSize: 25.0,
                           ),
                           maxLines: 3,
+                          controller: _bioController,
                         ),
                       ),
                     ],
@@ -131,7 +160,7 @@ class _personal_info_page_state extends State<personal_info_page> {
                       backgroundColor: Colors.black,
                       radius: MediaQuery.of(context).size.width/4.8,
                       child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/profile.png'),
+                        backgroundImage: AppConstants.currentUser.displayImage,
                         radius: MediaQuery.of(context).size.width/5,
                       ),
                     ),

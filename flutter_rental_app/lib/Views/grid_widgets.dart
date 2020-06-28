@@ -3,15 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/posting_objects.dart';
 
 class posting_grid_tile extends StatefulWidget {
-  posting_grid_tile({Key key}) : super(key: key);
+
+  final Posting posting;
+
+  posting_grid_tile({this.posting, Key key}) : super(key: key);
 
   @override
   _posting_grid_tile_state createState() => _posting_grid_tile_state();
 }
 
 class _posting_grid_tile_state extends State<posting_grid_tile> {
+
+
+  Posting _posting;
+
+  @override
+  void initState() {
+    this._posting = widget.posting;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,27 +38,27 @@ class _posting_grid_tile_state extends State<posting_grid_tile> {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/apartment.jpg'),
+                image: this._posting.displayImages.first,
                 fit: BoxFit.fill,
               ),
             ),
           ),
         ),
         AutoSizeText(
-          'Apartment - Vancouver, BC',
+          "${_posting.type} - ${_posting.city}, ${_posting.country}",
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),
         AutoSizeText(
-          'Awesome Apartment',
+        _posting.name,
           style: TextStyle(
             fontSize: 13,
           ),
         ),
         Text(
-          '\$120 / night',
+          '\$${_posting.price} / night',
           style: TextStyle(
             fontSize: 10,
           ),
@@ -57,7 +71,7 @@ class _posting_grid_tile_state extends State<posting_grid_tile> {
               color: AppConstants.selectedIcon,
               borderColor: Colors.grey,
               onRatingChanged: null,
-              rating: 4.5,
+              rating: _posting.getCurrentRating(),
             ),
           ],
         ),
@@ -67,13 +81,23 @@ class _posting_grid_tile_state extends State<posting_grid_tile> {
 }
 
 class trip_grid_tile extends StatefulWidget {
-  trip_grid_tile({Key key}) : super(key: key);
+
+  Booking booking;
+
+  trip_grid_tile({this.booking, Key key}) : super(key: key);
 
   @override
   _trip_grid_tile_state createState() => _trip_grid_tile_state();
 }
 
 class _trip_grid_tile_state extends State<trip_grid_tile> {
+  Booking _booking;
+  @override
+  void initState() {
+    this._booking = widget.booking;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,12 +105,11 @@ class _trip_grid_tile_state extends State<trip_grid_tile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 3 / 2
-          ,
+          aspectRatio: 3 / 2,
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/apartment.jpg'),
+                image: _booking.posting.displayImages.first,
                 fit: BoxFit.fill,
               ),
             ),
@@ -94,33 +117,33 @@ class _trip_grid_tile_state extends State<trip_grid_tile> {
         ),
 
         AutoSizeText(
-          'Awesome Apartment',
+          _booking.posting.name,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,
           ),
         ),
         AutoSizeText(
-          'Vancouver, BC',
+          '${_booking.posting.city}, ${_booking.posting.country}',
           style: TextStyle(
             fontSize: 16,
           ),
         ),
         Text(
-          '\$120 / night',
+          '\$ ${_booking.posting.price} / night',
           style: TextStyle(
             fontSize: 10,
           ),
         ),
         Text(
-          'August 10th, 2019',
+          '${_booking.getFirstDate()} -',
           style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
-          'August 12th, 2019',
+          '${_booking.getLastDate()}',
           style: TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.bold,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/messaging_objects.dart';
 import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Models/review_objects.dart';
 
@@ -40,6 +41,9 @@ class User extends Contact{
 
   List<Booking> bookings;
   List<Review> reviews;
+  List<Conversation> conversations;
+  List<Posting> savedPostings;
+  List<Posting> myPostings;
 
   User({String firstName = "", String lastName="", String imagePath="",
   this.email = "", this.bio = "", this.city = "", this.country=""
@@ -48,6 +52,9 @@ class User extends Contact{
     this.isCurrentlyHosting = false;
     this.bookings=[];
     this.reviews=[];
+    this.conversations = [];
+    this.savedPostings = [];
+    this.myPostings = [];
   }
 
   void changeCurrentlyHosting(bool isHosting){
@@ -69,6 +76,48 @@ class User extends Contact{
 
   void makeNewBooking(Booking booking){
     this.bookings.add(booking);
+  }
+
+  List<DateTime> getAllBookedDates(){
+    List<DateTime> allBookedDates = [];
+   this.myPostings.forEach((posting) {
+     posting.bookings.forEach((booking) {
+       allBookedDates.addAll(booking.dates);
+     });
+   });
+   return allBookedDates;
+  }
+
+  void addSavedPosting(Posting posting){
+    this.savedPostings.add(posting);
+  }
+
+  void removeSavedPosting(Posting posting){
+    for(int i = 0; i < this.savedPostings.length; i++){
+      if(this.savedPostings[i].name == posting.name){
+        this.savedPostings.removeAt(i);
+      }
+    }
+  }
+
+  List<Booking> getPreviousTrips() {
+    List<Booking> previousTrips = [];
+    this.bookings.forEach((booking) {
+      if(booking.dates.last.compareTo(DateTime.now()) <= 0){
+        previousTrips.add(booking);
+      }
+    });
+    return previousTrips;
+  }
+
+  List<Booking> getUpcomingTrips() {
+    List<Booking> upcomingTrips = [];
+    this.bookings.forEach((booking) {
+      if(booking.dates.last.compareTo(DateTime.now()) > 0){
+        upcomingTrips.add(booking);
+      }
+    });
+    return upcomingTrips;
   }
 
   double getCurrentRating(){

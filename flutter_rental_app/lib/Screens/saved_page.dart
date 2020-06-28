@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Views/grid_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 import 'package:flutterrentalapp/Screens/view_posting_page.dart';
@@ -20,7 +21,7 @@ class _saved_page_state extends State<saved_page> {
       child: GridView.builder(
         physics: ScrollPhysics(),
         shrinkWrap: true,
-        itemCount: 2,
+        itemCount: AppConstants.currentUser.savedPostings.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 15,
@@ -28,14 +29,17 @@ class _saved_page_state extends State<saved_page> {
           childAspectRatio: 3 / 4,
         ),
         itemBuilder: (context, index) {
+          Posting currentPosting = AppConstants.currentUser.savedPostings[index];
           return Stack(children: [
             InkResponse(
               enableFeedback: true,
-              child: posting_grid_tile(),
+              child: posting_grid_tile(posting: currentPosting,),
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  view_posting_page.routeName,
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => view_posting_page(posting: currentPosting),
+                    ),
                 );
               },
             ),

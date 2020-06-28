@@ -49,6 +49,10 @@ class Posting {
     });
   }
 
+  String getFullAddress(){
+    return this.address + ", " + this.city + ", " + this.country;
+  }
+
   String getAmenititesString(){
     if(this.amenitites.isEmpty){return "";}
     String amenitiesString = this.amenitites.toString();
@@ -71,11 +75,11 @@ class Posting {
 
   String getBathroomText(){
     String text = "";
-    if(this.beds["full"] != 0){
-      text += this.beds["full"].toString() + " full ";
+    if(this.bathrooms["full"] != 0){
+      text += this.bathrooms["full"].toString() + " full ";
     }
-    if(this.beds["half"] != 0){
-      text += this.beds["half"].toString() + " half ";
+    if(this.bathrooms["half"] != 0){
+      text += this.bathrooms["half"].toString() + " half ";
     }
     return text;
   }
@@ -116,9 +120,6 @@ class Posting {
 
 }
 
-
-
-
 class Booking{
   Posting posting;
   Contact contact;
@@ -130,6 +131,17 @@ class Booking{
     this.posting = posting;
     this.contact = contact;
     this.dates = dates;
+    this.dates.sort();
+  }
+
+  String getFirstDate(){
+    String firstDate = dates.first.toIso8601String();
+    return firstDate.substring(0,10);
+  }
+
+  String getLastDate(){
+    String lastDate = dates.last.toIso8601String();
+    return lastDate.substring(0,10);
   }
 
 }

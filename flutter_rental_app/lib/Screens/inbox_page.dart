@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/messaging_objects.dart';
 import 'package:flutterrentalapp/Screens/conversation_page.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
@@ -17,13 +18,19 @@ class _inbox_page_state extends State<inbox_page> {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
       child: ListView.builder(
-        itemCount: 2,
+        itemCount: AppConstants.currentUser.conversations.length,
         itemExtent: MediaQuery.of(context).size.height / 7,
         itemBuilder: (context, index) {
+          Conversation currentConversation = AppConstants.currentUser.conversations[index];
           return InkResponse(
-            child: conversation_list_tile(),
+            child: conversation_list_tile(conversation: currentConversation,),
             onTap: () {
-              Navigator.pushNamed(context, conversation_page.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => conversation_page(conversation: currentConversation,),
+                ),
+              );
             },
           );
         },

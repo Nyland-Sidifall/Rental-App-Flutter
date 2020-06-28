@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Screens/book_posting_page.dart';
 import 'package:flutterrentalapp/Views/calendar_widget.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
@@ -14,6 +15,15 @@ class bookings_page extends StatefulWidget {
 }
 
 class _bookings_page_state extends State<bookings_page> {
+
+  List<DateTime> _bookedDates = [];
+
+  @override
+  void initState() {
+    this._bookedDates = AppConstants.currentUser.getAllBookedDates();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -42,7 +52,7 @@ class _bookings_page_state extends State<bookings_page> {
                 child: PageView.builder(
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    return calendar_month_widget(monthIndex: index);
+                    return calendar_month_widget(monthIndex: index, bookedDates: this._bookedDates, );
                   },
                 ),
               ),
@@ -77,7 +87,7 @@ class _bookings_page_state extends State<bookings_page> {
             ),
             ListView.builder(
                 shrinkWrap: true,
-                itemCount: 2,
+                itemCount: AppConstants.currentUser.myPostings.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
@@ -91,7 +101,7 @@ class _bookings_page_state extends State<bookings_page> {
                             ),
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          child: my_posting_list_tile()),
+                          child: my_posting_list_tile(posting: AppConstants.currentUser.myPostings[index],)),
                     ),
                   );
                 }),

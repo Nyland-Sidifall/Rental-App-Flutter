@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/data.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
 
@@ -21,6 +22,10 @@ class _login_page_state extends State<login_page> {
   }
 
   void _logIn(){
+    PracticeData.populateFields();
+    AppConstants.currentUser = PracticeData.users[1];
+
+
     Navigator.pushNamed(context, guest_home_page.routeName);
   }
 

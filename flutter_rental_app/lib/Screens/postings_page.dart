@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Screens/create_posting_page.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
 
@@ -17,16 +19,20 @@ class _postings_page_state extends State<postings_page> {
     return Padding(
       padding: const EdgeInsets.only(top: 25),
       child: ListView.builder(
-        itemCount: 3,
+        itemCount: AppConstants.currentUser.myPostings.length+1,
           itemBuilder: (context,index){
-
             return Padding(
               padding: const EdgeInsets.fromLTRB(25,0,25,25),
               child: InkResponse(
                 onTap: (){
-                  Navigator.pushNamed(
+                  Navigator.push(
                       context,
-                      create_posting_page.routeName
+                      MaterialPageRoute(
+                        builder: (context) => create_posting_page(
+                          posting: (index == AppConstants.currentUser.myPostings.length) ?
+                          null : AppConstants.currentUser.myPostings[index],
+                        ),
+                      )
                   );
                 },
                 child: Container(
@@ -37,7 +43,9 @@ class _postings_page_state extends State<postings_page> {
                     ),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                    child: index == 2 ? create_posting_list_tile() : my_posting_list_tile()
+                    child: index == AppConstants.currentUser.myPostings.length ?
+                    create_posting_list_tile() :
+                    my_posting_list_tile(posting: AppConstants.currentUser.myPostings[index],)
                 ),
               ),
             );

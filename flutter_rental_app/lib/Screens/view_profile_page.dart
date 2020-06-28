@@ -1,6 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/data.dart';
+import 'package:flutterrentalapp/Models/review_objects.dart';
+import 'package:flutterrentalapp/Models/user_objects.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/form_widgets.dart';
 import 'package:flutterrentalapp/Views/list_widgets.dart';
@@ -9,15 +12,33 @@ import 'package:flutterrentalapp/Views/text_widgets.dart';
 class view_profile_page extends StatefulWidget {
   static final String routeName = '/viewProfilePageRoute';
 
-  view_profile_page({Key key}) : super(key: key);
+  final Contact contact;
+
+  view_profile_page({this.contact, Key key}) : super(key: key);
 
   @override
   _view_profile_page_state createState() => _view_profile_page_state();
 }
 
 class _view_profile_page_state extends State<view_profile_page> {
-  void _signUp() {
-    Navigator.pushNamed(context, guest_home_page.routeName);
+
+  Contact _contact;
+  User _user;
+
+  @override
+  void initState() {
+    //this._user = widget.contact.createUserFromContact();
+    _loadUser();
+    super.initState();
+  }
+
+  void _loadUser() {
+    String contactName = widget.contact.firstName;
+    PracticeData.users.forEach((user) {
+      if(user.firstName == contactName){
+        _user = user;
+      }
+    });
   }
 
   @override
@@ -44,7 +65,7 @@ class _view_profile_page_state extends State<view_profile_page> {
                           Container(
                             width: MediaQuery.of(context).size.width * 0.6,
                             child: AutoSizeText(
-                              'Hello! My name is Nyland',
+                              'Hello! My name is ${_user.firstName}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 25,
@@ -58,7 +79,7 @@ class _view_profile_page_state extends State<view_profile_page> {
                             radius: MediaQuery.of(context).size.width / 9.5,
                             child: CircleAvatar(
                               backgroundImage:
-                                  AssetImage('assets/images/profile.png'),
+                                  _user.displayImage,
                               radius: MediaQuery.of(context).size.width / 10,
                             ),
                           ),
@@ -81,7 +102,7 @@ class _view_profile_page_state extends State<view_profile_page> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: AutoSizeText(
-                  'I am a guy who likes solving mysteries with the gang across america yall!',
+                  _user.bio,
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -105,7 +126,7 @@ class _view_profile_page_state extends State<view_profile_page> {
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: AutoSizeText(
-                        'Lives in FakeCity, FS!',
+                        'Lives in ${_user.city}, ${_user.country}!',
                         style: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -131,12 +152,13 @@ class _view_profile_page_state extends State<view_profile_page> {
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ListView.builder(
-                  itemCount: 2,
+                  itemCount: _user.reviews.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    Review currentReview = _user.reviews[index];
                     return Padding(
                       padding: const EdgeInsets.only(top:10.0,bottom:10.0),
-                      child: ReviewListTile(),
+                      child: ReviewListTile(review: currentReview,),
                     );
                   },
                 ),

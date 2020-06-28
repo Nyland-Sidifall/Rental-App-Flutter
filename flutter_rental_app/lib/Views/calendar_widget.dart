@@ -3,8 +3,9 @@ import 'package:flutterrentalapp/Models/AppConstants.dart';
 
 class calendar_month_widget extends StatefulWidget {
   final int monthIndex;
+  final List<DateTime> bookedDates;
 
-  calendar_month_widget({Key key, this.monthIndex}) : super(key: key);
+  calendar_month_widget({Key key, this.monthIndex, this.bookedDates}) : super(key: key);
 
   @override
   _calendar_month_state createState() => _calendar_month_state();
@@ -14,6 +15,7 @@ class _calendar_month_state extends State<calendar_month_widget> {
   List<month_tile> _monthTiles = [];
   int _currentMonthInt;
   int _currentYearInt;
+
 
   void _setUpMonthTiles() {
     setState(() {
@@ -46,8 +48,9 @@ class _calendar_month_state extends State<calendar_month_widget> {
     }
 
     _setUpMonthTiles();
-
     super.initState();
+
+    print("unavailable dates: ${widget.bookedDates}");
   }
 
   @override
@@ -68,6 +71,14 @@ class _calendar_month_state extends State<calendar_month_widget> {
           ),
           itemBuilder: (context, index) {
             month_tile monthTile = _monthTiles[index];
+            if (widget.bookedDates.contains((monthTile.dateTime))){
+              return MaterialButton(
+                  onPressed: null,
+                  child: monthTile,
+                color: Colors.yellow,
+                disabledColor: Colors.yellow,
+              );
+            }
             return MaterialButton(onPressed: () {}, child: monthTile);
           },
         ),

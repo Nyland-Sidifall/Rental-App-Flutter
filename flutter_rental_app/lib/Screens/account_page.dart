@@ -19,20 +19,21 @@ class account_page extends StatefulWidget {
 class _account_page_state extends State<account_page> {
   String _hostingTitle = 'To Host Dashboard';
 
-  void _changeHosting() {
-    if (AppConstants.isHosting) {
-      AppConstants.isHosting = false;
+  void _changeHosting(){
+    if(AppConstants.currentUser.isCurrentlyHosting){
+      AppConstants.currentUser.isCurrentlyHosting = false;
       Navigator.pushNamed(
         context,
         guest_home_page.routeName,
       );
     } else {
-      AppConstants.isHosting = true;
+      AppConstants.currentUser.isCurrentlyHosting = true;
       Navigator.pushNamed(
         context,
         host_home_page.routeName,
       );
     }
+
   }
 
   void _logOut() {
@@ -41,7 +42,7 @@ class _account_page_state extends State<account_page> {
 
   @override
   void initState() {
-    if (AppConstants.isHosting) {
+    if (AppConstants.currentUser.isCurrentlyHosting) {
       _hostingTitle = 'To Guest Dashboard';
     }else{
       _hostingTitle = 'To Host Dashboard';
@@ -64,13 +65,18 @@ class _account_page_state extends State<account_page> {
               children: <Widget>[
                 MaterialButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, view_profile_page.routeName);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => view_profile_page(contact: AppConstants.currentUser.createContactFromUser()),
+                      ),
+                    );
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
                     radius: MediaQuery.of(context).size.width / 9.5,
                     child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/profile.png'),
+                      backgroundImage: AppConstants.currentUser.displayImage,
                       radius: MediaQuery.of(context).size.width / 10,
                     ),
                   ),
@@ -81,14 +87,14 @@ class _account_page_state extends State<account_page> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       AutoSizeText(
-                        'Nyland Sidifall',
+                        AppConstants.currentUser.getFullName(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
                         ),
                       ),
                       AutoSizeText(
-                        'fakeemail@gmail.com',
+                        AppConstants.currentUser.email,
                         style: TextStyle(
                           fontSize: 20,
                         ),

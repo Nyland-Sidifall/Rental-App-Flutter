@@ -5,31 +5,56 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/messaging_objects.dart';
+import 'package:flutterrentalapp/Models/posting_objects.dart';
+import 'package:flutterrentalapp/Models/review_objects.dart';
 import 'package:flutterrentalapp/Screens/view_posting_page.dart';
 import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 
 class ReviewListTile extends StatefulWidget {
-  ReviewListTile({Key key}) : super(key: key);
+
+  final Review review;
+
+  ReviewListTile({this.review, Key key}) : super(key: key);
 
   @override
   _ReviewListTileState createState() => _ReviewListTileState();
 }
 
 class _ReviewListTileState extends State<ReviewListTile> {
+
+  Review _review;
+
+  @override
+  void initState() {
+    this._review = widget.review;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Row(
           children: <Widget>[
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/profile.png'),
-              radius: MediaQuery.of(context).size.width / 15,
+            InkResponse(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => view_profile_page(contact: _review.contact),
+                  ),
+                );
+                },
+              child: CircleAvatar(
+                backgroundImage: _review.contact.displayImage,
+                radius: MediaQuery.of(context).size.width / 15,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: AutoSizeText(
-                'FinstaName',
+                _review.contact.getFullName(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
@@ -42,13 +67,13 @@ class _ReviewListTileState extends State<ReviewListTile> {
               color: AppConstants.selectedIcon,
               borderColor: Colors.grey,
               onRatingChanged: null,
-              rating: 4.5,
+              rating: _review.rating,
             ),
           ],
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10.0, bottom: 15),
-          child: AutoSizeText('His place was GRRREAT! That\'s all folkes!'),
+          child: AutoSizeText(_review.text),
         ),
       ],
     );
@@ -56,7 +81,8 @@ class _ReviewListTileState extends State<ReviewListTile> {
 }
 
 class conversation_list_tile extends StatefulWidget {
-  conversation_list_tile({Key key}) : super(key: key);
+  final Conversation conversation;
+  conversation_list_tile({this.conversation, Key key}) : super(key: key);
 
   @override
   _conversation_list_tile_state createState() =>
@@ -64,37 +90,45 @@ class conversation_list_tile extends StatefulWidget {
 }
 
 class _conversation_list_tile_state extends State<conversation_list_tile> {
+
+  Conversation _conversation;
+
+  @override
+  void initState() {
+    this._conversation = widget.conversation;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            view_profile_page.routeName,
+            MaterialPageRoute(
+              builder: (context) => view_profile_page(contact: _conversation.otherContact),
+            ),
           );
         },
         child: CircleAvatar(
-          backgroundImage: AssetImage('assets/images/profile.png'),
+          backgroundImage: _conversation.otherContact.displayImage,
           radius: MediaQuery.of(context).size.width / 14.0,
         ),
       ),
       title: Text(
-        'Kevin',
+        _conversation.otherContact.getFullName(),
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22.5,
         ),
       ),
-      subtitle: Text(
-        'Hey! How\'s it goin fam?!',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
+      subtitle: AutoSizeText(
+        _conversation.getLastMessageText(),
+        minFontSize: 20,
       ),
       trailing: Text(
-        'August 30th',
+        _conversation.getLastMessageDateTime(),
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 15,
@@ -106,137 +140,153 @@ class _conversation_list_tile_state extends State<conversation_list_tile> {
 }
 
 class message_list_tile extends StatelessWidget {
-  message_list_tile({Key key}) : super(key: key);
+
+  final Message message;
+
+  message_list_tile({this.message, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return /*Padding(
-      padding: const EdgeInsets.fromLTRB(15.0,15.0,35,15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
+    if(message.sender.firstName == AppConstants.currentUser.firstName){
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(15.0, 15.0, 35.0, 15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          message.text,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          textWidthBasis: TextWidthBasis.parent,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          message.getMessageDateTime(),
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             GestureDetector(
-              onTap: (){
-                Navigator.pushNamed(
-                    context,
-                    view_profile_page.routeName
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => view_profile_page(contact: AppConstants.currentUser.createContactFromUser()),
+                  ),
                 );
               },
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/profile.png'),
+                backgroundImage: AppConstants.currentUser.displayImage,
                 radius: MediaQuery.of(context).size.width / 20,
               ),
             ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(left:10.0),
-              child: Container(
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Hey, How\'s it going fam?! I hope you are doing well. This is'
-                            ' not a real message, i\'m just trying to test my app and '
-                            'making sure text wraps gooooood lmao.',
-                        style: TextStyle(
-                          fontSize: 20.0,
-
-                        ),
-                        textWidthBasis: TextWidthBasis.parent,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
+          ],
+        ),
+      );
+    }else{
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(15.0,15.0,35,15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => view_profile_page(contact: message.sender),
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: message.sender.displayImage,
+                radius: MediaQuery.of(context).size.width / 20,
+              ),
+            ),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left:10.0),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                            'September 1st',
+                          message.text,
                           style: TextStyle(
-                            fontSize: 15
+                            fontSize: 20.0,
+
+                          ),
+                          textWidthBasis: TextWidthBasis.parent,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          message.getMessageDateTime(),
+                          style: TextStyle(
+                              fontSize: 15
                           ),
                         ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );*/
-        Padding(
-      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 35.0, 15.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Container(
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Hey, How\'s it going fam?! I hope you are doing well. This is'
-                        ' not a real message, i\'m just trying to test my app and '
-                        'making sure text wraps gooooood lmao.',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        textWidthBasis: TextWidthBasis.parent,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        'September 1st',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, view_profile_page.routeName);
-            },
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/profile.png'),
-              radius: MediaQuery.of(context).size.width / 20,
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 
 class my_posting_list_tile extends StatefulWidget {
-  my_posting_list_tile({Key key}) : super(key: key);
+  final Posting posting;
+  my_posting_list_tile({this.posting, Key key}) : super(key: key);
 
   @override
   _my_posting_list_tile_state createState() => _my_posting_list_tile_state();
 }
 
 class _my_posting_list_tile_state extends State<my_posting_list_tile> {
+  Posting _posting;
+  @override
+  void initState() {
+    this._posting = widget.posting;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -245,7 +295,7 @@ class _my_posting_list_tile_state extends State<my_posting_list_tile> {
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: AutoSizeText(
-            'Awesome Apartment!',
+            _posting.name,
             maxLines: 2,
             minFontSize: 15.0,
             maxFontSize: 20.0,
@@ -257,7 +307,7 @@ class _my_posting_list_tile_state extends State<my_posting_list_tile> {
         trailing: AspectRatio(
           aspectRatio: 3 / 2,
           child: Image(
-            image: AssetImage('assets/images/apartment.jpg'),
+            image: _posting.displayImages.first,
             fit: BoxFit.fitWidth,
           ),
         ),

@@ -1,26 +1,82 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
+import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
 class create_posting_page extends StatefulWidget {
   static final String routeName = '/createPostingPageRoute';
+  final Posting posting;
 
-  create_posting_page({Key key}) : super(key: key);
+  create_posting_page({this.posting, Key key}) : super(key: key);
 
   @override
   _create_posting_page_state createState() => _create_posting_page_state();
 }
 
 class _create_posting_page_state extends State<create_posting_page> {
-  String _houseType;
   final List<String> _houseTypes = [
     'Detatched House',
     'Apartment',
     'Condo',
     'Town House',
   ];
+
+  TextEditingController _nameController;
+  TextEditingController _priceController;
+  TextEditingController _descriptionController;
+  TextEditingController _addressController;
+  TextEditingController _cityController;
+  TextEditingController _countryController;
+  TextEditingController _amenitiesController;
+
+  String _houseType;
+  Map<String,int> _beds;
+  Map<String,int> _bathrooms;
+  List<AssetImage> _images;
+
+  void _setUpInitialValues(){
+    if(widget.posting ==null){
+      _nameController = TextEditingController(text: "");
+      _priceController = TextEditingController(text: "");
+      _descriptionController = TextEditingController(text: "");
+      _addressController = TextEditingController(text: "");
+      _cityController = TextEditingController(text: "");
+      _countryController = TextEditingController(text: "");
+      _amenitiesController = TextEditingController(text: "");
+      _beds = {
+        'small' : 0,
+        'medium' : 0,
+        'large' : 0
+      };
+      _bathrooms = {
+        'full' : 0,
+        'half' : 0,
+      };
+      _images = [];
+    }else{
+      _nameController = TextEditingController(text: widget.posting.name);
+      _priceController = TextEditingController(text: widget.posting.price.toString());
+      _descriptionController = TextEditingController(text: widget.posting.description);
+      _addressController = TextEditingController(text: widget.posting.address);
+      _cityController = TextEditingController(text: widget.posting.city);
+      _countryController = TextEditingController(text: widget.posting.country);
+      _amenitiesController = TextEditingController(text: widget.posting.getAmenititesString());
+      _beds = widget.posting.beds;
+      _bathrooms = widget.posting.bathrooms;
+      _images = widget.posting.displayImages;
+    }
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    _setUpInitialValues();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +121,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _nameController,
                         ),
                       ),
                       Padding(
@@ -103,6 +160,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                                   fontSize: 25.0,
                                 ),
                                 keyboardType: TextInputType.number,
+                                controller: _priceController,
                               ),
                             ),
                             Padding(
@@ -125,6 +183,9 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _descriptionController,
+                          maxLines: 3,
+                          minLines: 1,
                         ),
                       ),
                       Padding(
@@ -134,6 +195,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _addressController,
                         ),
                       ),
                       Padding(
@@ -143,6 +205,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _cityController,
                         ),
                       ),
                       Padding(
@@ -152,6 +215,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _countryController,
                         ),
                       ),
                       Padding(
@@ -173,15 +237,15 @@ class _create_posting_page_state extends State<create_posting_page> {
                             children: <Widget>[
                               facilities_widget(
                                 type: 'Twin/Single',
-                                startValue: 0,
+                                startValue: _beds['small'],
                               ),
                               facilities_widget(
                                 type: 'Double',
-                                startValue: 0,
+                                startValue: _beds['medium'],
                               ),
                               facilities_widget(
                                 type: 'Queen/King',
-                                startValue: 0,
+                                startValue: _beds['large'],
                               ),
                             ],
                           ),
@@ -203,11 +267,11 @@ class _create_posting_page_state extends State<create_posting_page> {
                           children: <Widget>[
                             facilities_widget(
                               type: 'Full',
-                              startValue: 0,
+                              startValue: _bathrooms['full'],
                             ),
                             facilities_widget(
                               type: 'Half',
-                              startValue: 0,
+                              startValue: _bathrooms['half'],
                             ),
                           ],
                         ),
@@ -220,6 +284,9 @@ class _create_posting_page_state extends State<create_posting_page> {
                           style: TextStyle(
                             fontSize: 25.0,
                           ),
+                          controller: _amenitiesController,
+                          maxLines: 3,
+                          minLines: 1,
                         ),
                       ),
                       Padding(
@@ -236,7 +303,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                         padding: const EdgeInsets.only(top: 20.0, bottom: 25.0),
                         child: GridView.builder(
                             shrinkWrap: true,
-                            itemCount: 2,
+                            itemCount: _images.length+1,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -245,7 +312,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                               childAspectRatio: 3 / 2,
                             ),
                             itemBuilder: (context, index) {
-                              if (index == 1) {
+                              if (index == _images.length) {
                                 return Container(
                                   child: IconButton(
                                     icon: Icon(Icons.add),
@@ -256,8 +323,7 @@ class _create_posting_page_state extends State<create_posting_page> {
                               return MaterialButton(
                                 onPressed: () {},
                                 child: Image(
-                                  image:
-                                      AssetImage('assets/images/apartment.jpg'),
+                                  image: _images[index],
                                   fit: BoxFit.fill,
                                 ),
                               );
