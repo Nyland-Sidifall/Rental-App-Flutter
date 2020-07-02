@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Models/data.dart';
+import 'package:flutterrentalapp/Models/user_objects.dart';
 import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Screens/signup_page.dart';
 
@@ -17,16 +19,31 @@ class login_page extends StatefulWidget {
 
 class _login_page_state extends State<login_page> {
 
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+
   void _signUp(){
     Navigator.pushNamed(context, signup_page.routeName);
   }
 
   void _logIn(){
-    PracticeData.populateFields();
-    AppConstants.currentUser = PracticeData.users[1];
+    if(_formKey.currentState.validate()){
+      String email = _emailController.text;
+      String password = _passwordController.text;
 
-
-    Navigator.pushNamed(context, guest_home_page.routeName);
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+      ).then((firebaseUser) {
+       String userID = firebaseUser.user.uid;
+       AppConstants.currentUser = User(id: userID);
+       AppConstants.currentUser.getPersonalInfoFromFirestore().whenComplete((){
+         Navigator.pushNamed(context, guest_home_page.routeName);
+       });
+      });
+    }
   }
 
   @override
@@ -47,28 +64,44 @@ class _login_page_state extends State<login_page> {
                 textAlign: TextAlign.center,
               ),
               Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 25.0),
                       child: TextFormField(
                         decoration: InputDecoration(
-                          labelText: "username/email"
+                          labelText: "Email"
                         ),
                         style: TextStyle(
                           fontSize: 25.0,
                         ),
+                        validator: (text){
+                          if(!text.contains('@')){
+                            return 'Please return a valid email';
+                          }
+                          return null;
+                        },
+                        controller: _emailController,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: TextFormField(
                         decoration: InputDecoration(
-                            labelText: "password"
+                            labelText: "Password"
                         ),
                         style: TextStyle(
                           fontSize: 25.0,
                         ),
+                        obscureText: true,
+                        validator: (text){
+                          if(text.length < 6){
+                            return 'Password must be at leaset 6 characters';
+                          }
+                          return null;
+                        },
+                        controller: _passwordController,
                       ),
                     ),
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/posting_objects.dart';
-import 'package:flutterrentalapp/Screens/guest_home_page.dart';
 import 'package:flutterrentalapp/Views/calendar_widget.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
 
@@ -17,10 +16,30 @@ class book_posting_page extends StatefulWidget {
 class _book_posting_page_state extends State<book_posting_page> {
 
   Posting _posting;
+  List<calendar_month_widget> _calendarWidgets = [];
+  List<DateTime> _bookedDates = [];
+
+  void _buildCalendarWidgets(){
+
+    for(int i = 0; i < 12; i++){
+      _calendarWidgets.add(calendar_month_widget(monthIndex: i, bookedDates: _bookedDates,));
+    }
+    setState(() {
+    });
+  }
+
+  void _loadBookedDates(){
+
+    this._posting.getAllBookingsFromFirestore().whenComplete((){
+      this._bookedDates = this._posting.getAllBookedDates();
+      this._buildCalendarWidgets();
+    });
+  }
 
   @override
   void initState() {
    this._posting = widget.posting;
+   this._loadBookedDates();
     super.initState();
   }
 
@@ -32,7 +51,7 @@ class _book_posting_page_state extends State<book_posting_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppBarText(text: 'Book a Room'),
+        title: AppBarText(text: 'Book ${this._posting.name}'),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
@@ -54,10 +73,10 @@ class _book_posting_page_state extends State<book_posting_page> {
             ),
             Container(
               height: MediaQuery.of(context).size.height / 2,
-              child: PageView.builder(
-                itemCount: 12,
+              child: (_calendarWidgets.isEmpty) ? Container() : PageView.builder(
+                itemCount: _calendarWidgets.length,
                 itemBuilder: (context, index) {
-                  return calendar_month_widget(monthIndex: index, bookedDates: _posting.getAllBookedDates(),);
+                  return _calendarWidgets[index];
                 },
               ),
             ),

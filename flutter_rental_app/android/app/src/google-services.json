@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "457102820470",
+    "firebase_url": "https://ascendant-yeti-280804.firebaseio.com",
+    "project_id": "ascendant-yeti-280804",
+    "storage_bucket": "ascendant-yeti-280804.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457102820470:android:8ac01ff585494df5a34b57",
+        "android_client_info": {
+          "package_name": "com.example.flutterrentalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457102820470-nfgtt50fqos2ahpblj9mhmo5qvd0ee3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdJtnqnPPZfoSSmO6pfnTmgVFc_5hEB88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457102820470-nfgtt50fqos2ahpblj9mhmo5qvd0ee3n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457102820470-bqarimjirfpv33bb4119u7ohfhaa7t65.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterrentalapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -23,6 +23,10 @@ class _posting_grid_tile_state extends State<posting_grid_tile> {
   @override
   void initState() {
     this._posting = widget.posting;
+    this._posting.getFirstImageFromStorage().whenComplete((){
+      setState(() {
+      });
+    });
     super.initState();
   }
 
@@ -35,7 +39,7 @@ class _posting_grid_tile_state extends State<posting_grid_tile> {
         AspectRatio(
           aspectRatio: 3 / 2
           ,
-          child: Container(
+          child: (this._posting.displayImages.isEmpty) ? Container() : Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: this._posting.displayImages.first,

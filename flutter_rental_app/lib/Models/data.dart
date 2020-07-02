@@ -14,7 +14,6 @@ class PracticeData{
     User user1 = User(
       firstName: "Fake",
       lastName: "Name",
-      imagePath: "assets/images/profile.png",
       email: "fakeemail1@fakehost.com",
       bio: "Me go go travel bro!",
       city: "Nunya",
@@ -24,7 +23,6 @@ class PracticeData{
     User user2 = User(
       firstName: "Faker",
       lastName: "Namer",
-      imagePath: "assets/images/profile.png",
       email: "evenfakeremail1@fakehost.com",
       bio: "Traveling is cool I think.",
       city: "Topeca",
@@ -78,8 +76,8 @@ class PracticeData{
       host: user1.createContactFromUser(),
     );
 
-    posting1.setImages(["assets/images/apartment.jpg","assets/images/profile.png"]);
-    posting1.amenitites = ['washer','dryer','iron','coffee machine'];
+//    posting1.setImages(["assets/images/apartment.jpg","assets/images/profile.png"]);
+    posting1.amenities = ['washer','dryer','iron','coffee machine'];
     posting1.beds = {
       'small':0,
       'medium':2,
@@ -101,8 +99,8 @@ class PracticeData{
       host: user2.createContactFromUser(),
     );
 
-    posting2.setImages(["assets/images/apartment.jpg","assets/images/profile.png","assets/images/apartment.jpg"]);
-    posting2.amenitites = ['dishwasher','cabel','wifi'];
+//    posting2.setImages(["assets/images/apartment.jpg","assets/images/profile.png","assets/images/apartment.jpg"]);
+    posting2.amenities = ['dishwasher','cabel','wifi'];
     posting2.beds = {
       'small':1,
       'medium':0,

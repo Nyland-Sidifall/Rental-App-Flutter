@@ -16,6 +16,12 @@ class trips_page extends StatefulWidget {
 }
 
 class _trips_page_state extends State<trips_page> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(

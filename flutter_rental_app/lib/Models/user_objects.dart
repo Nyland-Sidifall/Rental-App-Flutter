@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
@@ -6,32 +8,48 @@ import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Models/review_objects.dart';
 
 class Contact{
+
+  String id;
   String firstName;
   String lastName;
   String fullName;
-  String imagePath;
-  AssetImage displayImage;
+  MemoryImage displayImage;
 
-  Contact({this.firstName = "", this.lastName="", this.imagePath=""}){
-    this.displayImage = AssetImage(this.imagePath);
-  }
+  Contact({this.id = "",this.firstName = "", this.lastName="", this.displayImage});
 
   String getFullName(){
     return this.fullName = this.firstName +" "+this.lastName;
   }
 
-  User createUserFromContact(){
-    return User(
-      firstName: this.firstName,
-      lastName: this.lastName,
-      imagePath: this.imagePath,
-    );
+  Future<void> getContactInfoFromFirestore() async {
+    DocumentSnapshot snapshot = await Firestore.instance.collection('users').document(id).get();
+    this.firstName = snapshot['firstName'] ?? "";
+    this.lastName = snapshot['lastName'] ?? "";
   }
 
+  Future<MemoryImage> getImageFromStorage() async {
+    if(displayImage != null){return displayImage;}
+    final String imagePath = "userImages/${this.id}/profile_pic.jpg";
+    final imageData = await FirebaseStorage.instance.ref().child(imagePath).getData(1024*1024);
+    this.displayImage = MemoryImage(imageData);
+    return this.displayImage;
+  }
+
+
+  User createUserFromContact(){
+    return User(
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      displayImage: this.displayImage,
+    );
+  }
 }
 
 
 class User extends Contact{
+
+  DocumentSnapshot snapshot;
   String email;
   String bio;
   String city;
@@ -45,9 +63,9 @@ class User extends Contact{
   List<Posting> savedPostings;
   List<Posting> myPostings;
 
-  User({String firstName = "", String lastName="", String imagePath="",
+  User({String id = "", String firstName = "", String lastName="", MemoryImage displayImage,
   this.email = "", this.bio = "", this.city = "", this.country=""
-  }):super(firstName: firstName, lastName: lastName, imagePath: imagePath){
+  }):super(id: id, firstName: firstName, lastName: lastName, displayImage: displayImage){
     this.isHost = false;
     this.isCurrentlyHosting = false;
     this.bookings=[];
@@ -56,6 +74,48 @@ class User extends Contact{
     this.savedPostings = [];
     this.myPostings = [];
   }
+
+  Future<void> getUserInfoFromFirestore() async {
+    DocumentSnapshot snapshot = await Firestore.instance.collection('users').document(this.id).get();
+    this.snapshot = snapshot;
+    this.firstName = snapshot['firstName'] ?? "";
+    this.lastName = snapshot['lastName'] ?? "";
+    this.email = snapshot['email'] ?? "";
+    this.bio = snapshot['bio'] ?? "";
+    this.city = snapshot['city'] ?? "";
+    this.country = snapshot['country'] ?? "";
+    this.isHost = snapshot['isHost'] ?? false;
+  }
+
+  Future<void> getPersonalInfoFromFirestore() async {
+    await getUserInfoFromFirestore();
+    await getImageFromStorage();
+    await getMyPostingsFromFirestore();
+    await getSavedPostingsFromFirestore();
+    await getAllBookingsFromFirestore();
+  }
+
+  Future<void> getMyPostingsFromFirestore() async {
+    List<String> myPostingIDs = List<String>.from(snapshot['myPostingIDs']) ?? [];
+    for(String postingID in myPostingIDs) {
+      Posting newPosting = Posting(id: postingID);
+      await newPosting.getPostingInfoFromFirestore();
+      await newPosting.getAllBookingsFromFirestore();
+      await newPosting.getAllImagesFromStorage();
+      this.myPostings.add(newPosting);
+    }
+  }
+
+  Future<void> getSavedPostingsFromFirestore() async {
+    List<String> savedPostingIDs = List<String>.from(snapshot['savedPostingIDs']) ?? [];
+    for(String postingID in savedPostingIDs) {
+      Posting newPosting = Posting(id: postingID);
+      await newPosting.getPostingInfoFromFirestore();
+      await newPosting.getFirstImageFromStorage();
+      this.savedPostings.add(newPosting);
+    }
+  }
+
 
   void changeCurrentlyHosting(bool isHosting){
     this.isCurrentlyHosting = isHosting;
@@ -68,10 +128,21 @@ class User extends Contact{
 
   Contact createContactFromUser(){
     return Contact(
+      id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
-      imagePath: this.imagePath
+      displayImage: this.displayImage,
     );
+  }
+
+  Future<void> getAllBookingsFromFirestore() async {
+    this.bookings = [];
+    QuerySnapshot snapshots = await Firestore.instance.collection('users/${this.id}/bookings').getDocuments();
+    for(var snapshot in snapshots.documents){
+      Booking newBooking = Booking();
+      await newBooking.getBookingInfoFromFirestoreFromUser(this.createContactFromUser(), snapshot);
+      this.bookings.add(newBooking);
+    }
   }
 
   void makeNewBooking(Booking booking){
