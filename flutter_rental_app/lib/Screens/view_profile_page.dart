@@ -118,19 +118,22 @@ class _view_profile_page_state extends State<view_profile_page> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.home),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: AutoSizeText(
-                        'Lives in ${_user.city}, ${_user.country}!',
-                        style: TextStyle(
-                          fontSize: 20.0,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.home),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: AutoSizeText(
+                          'Lives in ${_user.city}, ${_user.country}',
+                          minFontSize: 20,
+                          maxLines: 2,
+
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -145,7 +148,7 @@ class _view_profile_page_state extends State<view_profile_page> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top:20.0),
-                child: review_form(),
+                child: review_form(user: this._user,),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),

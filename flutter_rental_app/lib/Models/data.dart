@@ -76,7 +76,7 @@ class PracticeData{
       host: user1.createContactFromUser(),
     );
 
-//    posting1.setImages(["assets/images/apartment.jpg","assets/images/profile.png"]);
+//    posting1.setImages(["assets/images/apartment.jpg","assets/images/defaultAvatar.png"]);
     posting1.amenities = ['washer','dryer','iron','coffee machine'];
     posting1.beds = {
       'small':0,
@@ -99,7 +99,7 @@ class PracticeData{
       host: user2.createContactFromUser(),
     );
 
-//    posting2.setImages(["assets/images/apartment.jpg","assets/images/profile.png","assets/images/apartment.jpg"]);
+//    posting2.setImages(["assets/images/apartment.jpg","assets/images/defaultAvatar.png","assets/images/apartment.jpg"]);
     posting2.amenities = ['dishwasher','cabel','wifi'];
     posting2.beds = {
       'small':1,

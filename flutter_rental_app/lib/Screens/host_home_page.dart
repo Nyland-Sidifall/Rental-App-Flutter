@@ -4,7 +4,7 @@ import 'package:flutterrentalapp/Screens/account_page.dart';
 import 'package:flutterrentalapp/Screens/bookings_pages.dart';
 import 'package:flutterrentalapp/Screens/explore_page.dart';
 import 'package:flutterrentalapp/Screens/inbox_page.dart';
-import 'package:flutterrentalapp/Screens/postings_page.dart';
+import 'package:flutterrentalapp/Screens/my_postings_page.dart';
 import 'package:flutterrentalapp/Screens/saved_page.dart';
 import 'package:flutterrentalapp/Screens/trips_page.dart';
 import 'package:flutterrentalapp/Views/text_widgets.dart';
@@ -12,8 +12,9 @@ import 'package:flutterrentalapp/Views/text_widgets.dart';
 class host_home_page extends StatefulWidget {
 
   static final String routeName = '/hostHomePageRoute';
+  final int index;
 
-  host_home_page({Key key}) : super(key: key);
+  host_home_page({Key key, this.index}) : super(key: key);
 
   @override
   _host_home_page_state createState() => _host_home_page_state();
@@ -22,6 +23,7 @@ class host_home_page extends StatefulWidget {
 class _host_home_page_state extends State<host_home_page> {
 
   int _selectedIndex = 3;
+
   final List<String> _pageTitles = [
     'Bookings',
     'My Postings',
@@ -31,7 +33,7 @@ class _host_home_page_state extends State<host_home_page> {
 
   final List<Widget> _pages = [
     bookings_page(),
-    postings_page(),
+    my_postings_page(),
     inbox_page(),
     account_page(),
   ];
@@ -48,6 +50,12 @@ class _host_home_page_state extends State<host_home_page> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    this._selectedIndex = widget.index ?? 3;
+    super.initState();
   }
 
   @override

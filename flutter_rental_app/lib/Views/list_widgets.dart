@@ -8,7 +8,6 @@ import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Models/messaging_objects.dart';
 import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Models/review_objects.dart';
-import 'package:flutterrentalapp/Screens/view_posting_page.dart';
 import 'package:flutterrentalapp/Screens/view_profile_page.dart';
 
 class ReviewListTile extends StatefulWidget {
@@ -61,7 +60,7 @@ class _ReviewListTileState extends State<ReviewListTile> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
+              padding: const EdgeInsets.only(left: 15, right: 5),
               child: AutoSizeText(
                 _review.contact.getFullName(),
                 style: TextStyle(
@@ -90,6 +89,7 @@ class _ReviewListTileState extends State<ReviewListTile> {
 }
 
 class conversation_list_tile extends StatefulWidget {
+
   final Conversation conversation;
   conversation_list_tile({this.conversation, Key key}) : super(key: key);
 
@@ -105,6 +105,11 @@ class _conversation_list_tile_state extends State<conversation_list_tile> {
   @override
   void initState() {
     this._conversation = widget.conversation;
+    this._conversation.otherContact.getImageFromStorage().whenComplete((){
+      setState(() {
+
+      });
+    });
     super.initState();
   }
 
@@ -133,11 +138,12 @@ class _conversation_list_tile_state extends State<conversation_list_tile> {
         ),
       ),
       subtitle: AutoSizeText(
-        _conversation.getLastMessageText(),
+        widget.conversation.lastMessage.text,
         minFontSize: 20,
+        overflow: TextOverflow.ellipsis,
       ),
       trailing: Text(
-        _conversation.getLastMessageDateTime(),
+        widget.conversation.lastMessage.getMessageDateTime(),
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 15,

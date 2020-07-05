@@ -25,6 +25,14 @@ class _login_page_state extends State<login_page> {
 
 
   void _signUp(){
+    if (_formKey.currentState.validate()){
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      AppConstants.currentUser = User();
+      AppConstants.currentUser.email = email;
+      AppConstants.currentUser.password = password;
+      Navigator.pushNamed(context, signup_page.routeName);
+    }
     Navigator.pushNamed(context, signup_page.routeName);
   }
 
@@ -49,109 +57,111 @@ class _login_page_state extends State<login_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(50, 50, 50, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Welcome to ${AppConstants.appName}!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30.0,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(50, 50, 50, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Welcome to ${AppConstants.appName}!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.0,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Email"
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Email"
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          validator: (text){
+                            if(!text.contains('@')){
+                              return 'Please return a valid email';
+                            }
+                            return null;
+                          },
+                          controller: _emailController,
                         ),
-                        style: TextStyle(
-                          fontSize: 25.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Password"
+                          ),
+                          style: TextStyle(
+                            fontSize: 25.0,
+                          ),
+                          obscureText: true,
+                          validator: (text){
+                            if(text.length < 6){
+                              return 'Password must be at leaset 6 characters';
+                            }
+                            return null;
+                          },
+                          controller: _passwordController,
                         ),
-                        validator: (text){
-                          if(!text.contains('@')){
-                            return 'Please return a valid email';
-                          }
-                          return null;
-                        },
-                        controller: _emailController,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:30.0),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _logIn();
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0,
+                        color: Colors.black,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "Password"
-                        ),
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                        obscureText: true,
-                        validator: (text){
-                          if(text.length < 6){
-                            return 'Password must be at leaset 6 characters';
-                          }
-                          return null;
-                        },
-                        controller: _passwordController,
+                    color: Colors.blue,
+                    height: MediaQuery.of(context).size.height/15,
+                    minWidth: double.infinity,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:30.0),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _signUp();
+                    },
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.0,
+                        color: Colors.black,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    _logIn();
-                  },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                      color: Colors.black,
+                    color: Colors.grey,
+                    height: MediaQuery.of(context).size.height/15,
+                    minWidth: double.infinity,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  color: Colors.blue,
-                  height: MediaQuery.of(context).size.height/15,
-                  minWidth: double.infinity,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top:30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    _signUp();
-                  },
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                      color: Colors.black,
-                    ),
-                  ),
-                  color: Colors.grey,
-                  height: MediaQuery.of(context).size.height/15,
-                  minWidth: double.infinity,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

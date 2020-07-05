@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,6 +58,7 @@ class User extends Contact{
   String country;
   bool isHost;
   bool isCurrentlyHosting;
+  String password;
 
   List<Booking> bookings;
   List<Review> reviews;
@@ -116,13 +119,48 @@ class User extends Contact{
     }
   }
 
+  Future<void> addUserToFirestore() async {
+    Map<String, dynamic> data = {
+      "bio" : this.bio,
+      "city" : this.city,
+      "country": this.country,
+      "email": this.email,
+      "firstName": this.firstName,
+      "isHost": false,
+      "lastName": this.lastName,
+      "myPostingIDs": [],
+      "savedPostingIDs": []
+    };
+    await Firestore.instance.document('users/${this.id}').setData(data);
+  }
+
+  Future<void> updateUserInFirestore() async {
+    Map<String, dynamic> data = {
+      "bio" : this.bio,
+      "city" : this.city,
+      "country": this.country,
+      "firstName": this.firstName,
+      "lastName": this.lastName,
+    };
+    await Firestore.instance.document('users/${this.id}').updateData(data);
+  }
+
+  Future<void> addImageToFirestore(File imageFile) async {
+    StorageReference reference = FirebaseStorage.instance.ref().child('userImages/${this.id}/profile_pic.jpg');
+    await reference.putFile(imageFile).onComplete;
+    this.displayImage = MemoryImage(imageFile.readAsBytesSync());
+  }
 
   void changeCurrentlyHosting(bool isHosting){
     this.isCurrentlyHosting = isHosting;
   }
 
-  void becomeHost(){
+  Future<void> becomeHost() async {
     this.isHost = true;
+    Map<String,dynamic> data = {
+      'isHost' : true,
+    };
+    await Firestore.instance.document('users/${this.id}').updateData(data);
     this.changeCurrentlyHosting(true);
   }
 
@@ -135,6 +173,17 @@ class User extends Contact{
     );
   }
 
+  Future<void> addPostingToMyPostings(Posting posting) async {
+    this.myPostings.add(posting);
+    List<String> myPostingIDs = [];
+    this.myPostings.forEach((posting) {
+      myPostingIDs.add(posting.id);
+    });
+    await Firestore.instance.document('users/${this.id}').updateData({
+      'myPostingIDs': myPostingIDs,
+    });
+  }
+
   Future<void> getAllBookingsFromFirestore() async {
     this.bookings = [];
     QuerySnapshot snapshots = await Firestore.instance.collection('users/${this.id}/bookings').getDocuments();
@@ -145,8 +194,24 @@ class User extends Contact{
     }
   }
 
-  void makeNewBooking(Booking booking){
+  Future<void> addBookingToFirestore(Booking booking) async {
+    Map<String, dynamic> data = {
+      'dates': booking.dates,
+      'postingID': booking.posting.id,
+    };
+    await Firestore.instance.document('users/${this.id}/bookings/${booking.id}').setData(data);
     this.bookings.add(booking);
+    await addBookingConversation(booking);
+  }
+
+  Future<void> addBookingConversation(Booking booking) async {
+    Conversation conversation = Conversation();
+    conversation.addConversationToFirestore(booking.posting.host);
+    String text = "Hi my name is ${AppConstants.currentUser.firstName} and I have "
+        "just booked ${booking.posting.name} from ${booking.dates.first} to "
+        "${booking.dates.last} if you have any questions contact me. Enjoy your "
+        "stay!";
+    await conversation.addMessageToFirestore(text);
   }
 
   List<DateTime> getAllBookedDates(){
@@ -159,16 +224,36 @@ class User extends Contact{
    return allBookedDates;
   }
 
-  void addSavedPosting(Posting posting){
-    this.savedPostings.add(posting);
-  }
-
-  void removeSavedPosting(Posting posting){
-    for(int i = 0; i < this.savedPostings.length; i++){
-      if(this.savedPostings[i].name == posting.name){
-        this.savedPostings.removeAt(i);
+  Future<void> addSavedPosting(Posting posting) async {
+    for(var savedPosting in this.savedPostings){
+      if(savedPosting.id == posting.id){
+        return;
       }
     }
+    this.savedPostings.add(posting);
+    List<String> savedPostingIDs = [];
+    this.savedPostings.forEach((savedPosting) {
+      savedPostingIDs.add(savedPosting.id);
+    });
+    await Firestore.instance.document('users/${this.id}').updateData({
+      'savedPostingIDs':savedPostingIDs,
+    });
+  }
+
+  Future<void> removeSavedPosting(Posting posting) async {
+    for(int i = 0; i < this.savedPostings.length; i++){
+      if(this.savedPostings[i].id == posting.id){
+        this.savedPostings.removeAt(i);
+        break;
+      }
+    }
+    List<String> savedPostingIDs = [];
+    this.savedPostings.forEach((savedPosting) {
+      savedPostingIDs.add(savedPosting.id);
+    });
+    await Firestore.instance.document('users/${this.id}').updateData({
+      'savedPostingIDs':savedPostingIDs,
+    });
   }
 
   List<Booking> getPreviousTrips() {
@@ -201,14 +286,15 @@ class User extends Contact{
     return rating;
   }
 
-  void postNewReview(String text, double rating){
-    Review newReview = Review();
-    newReview.createReview(AppConstants.currentUser.createContactFromUser(),
-        text,
-        rating,
-        DateTime.now()
-    );
-    this.reviews.add(newReview);
+  Future<void> postNewReview(String text, double rating) async {
+    Map<String,dynamic> data = {
+      'dateTime': DateTime.now(),
+      'name': AppConstants.currentUser.getFullName(),
+      'rating': rating,
+      'text': text,
+      'userID': AppConstants.currentUser.id,
+    };
+    await Firestore.instance.collection('users/${this.id}/reviews').add(data);
   }
 
 }

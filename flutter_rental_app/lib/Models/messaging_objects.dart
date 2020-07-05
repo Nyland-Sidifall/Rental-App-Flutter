@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Models/user_objects.dart';
 
@@ -9,7 +8,9 @@ class Conversation{
   List<Message> messages;
   Message lastMessage;
 
-  Conversation();
+  Conversation(){
+    messages = [];
+  }
 
   void createConversation(Contact otherContact, List<Message> messages){
     this.otherContact = otherContact;
@@ -29,16 +30,56 @@ class Conversation{
     this.lastMessage.dateTime = lastMessageDateTime;
     this.lastMessage.text = lastMessageText;
 
-    Map<String,String> userInfo = Map<String,String>.from(snapshot['userInfo']);
-    userInfo.forEach((id, name) {
-      if(id != AppConstants.currentUser.id){
-        this.otherContact = Contact(
-            id:id,
-            firstName: name.split(" ")[0],
-            lastName: name.split(" ")[1],
-        );
+    List<String> userIDs = List<String>.from(snapshot['userIDs']) ?? [];
+    List<String> userNames = List<String>.from(snapshot['userNames']) ?? [];
+    this.otherContact = Contact();
+    for(String userID in userIDs){
+      if(userID != AppConstants.currentUser.id){
+        this.otherContact.id = userID;
+        break;
       }
-    });
+    }
+    for(String name in userNames){
+      if(name != AppConstants.currentUser.getFullName()){
+        this.otherContact.firstName = name.split(" ")[0];
+        this.otherContact.lastName = name.split(" ")[1];
+      }
+    }
+  }
+
+  Future<void> addConversationToFirestore(Contact otherContact) async {
+    List<String> userNames = [
+      AppConstants.currentUser.getFullName(),
+      otherContact.getFullName(),
+    ];
+
+    List<String> userIDs = [
+      AppConstants.currentUser.id,
+      otherContact.id,
+    ];
+
+    Map<String,dynamic> convoData = {
+      'lastMessageDateTime':DateTime.now(),
+      'lastMessageText': "",
+      'userNames':userNames,
+      'userIDs': userIDs,
+    };
+    DocumentReference reference = await Firestore.instance.collection('conversations').add(convoData);
+    this.id = reference.documentID;
+  }
+
+  Future<void> addMessageToFirestore(String messageText) async {
+    Map<String, dynamic> messageData = {
+      'dateTime': DateTime.now(),
+      'senderID': AppConstants.currentUser.id,
+      'text': messageText
+    };
+    await Firestore.instance.collection('conversations/${this.id}/messages').add(messageData);
+    Map<String,dynamic> convoData = {
+      'lastMessageDateTime': DateTime.now(),
+      'lastMessageText': messageText
+    };
+    await Firestore.instance.document('conversations/${this.id}').updateData(convoData);
   }
 
   String getLastMessageText(){
@@ -56,10 +97,10 @@ class Conversation{
       return messages.last.getMessageDateTime();
     }
   }
-
 }
 
 class Message {
+
   Contact sender;
   String text;
   DateTime dateTime;
@@ -84,13 +125,13 @@ class Message {
     final DateTime now = DateTime.now();
     final int today = now.day;
     if(this.dateTime.day == today){
-      return _getTIme();
+      return _getTime();
     }else{
       return _getDate();
     }
   }
 
-  _getTIme(){
+  _getTime(){
     String time = dateTime.toIso8601String().substring(11,16);
     String hours = time.substring(0,2);
     int hoursInt = int.parse(hours);
@@ -98,7 +139,6 @@ class Message {
     hours = hoursInt.toString();
     String minutes = time.substring(2);
     return hours + minutes;
-
   }
 
   String _getDate(){
@@ -109,6 +149,4 @@ class Message {
     String day = date.substring(3,5);
     return monthName+" "+day;
   }
-
-
 }

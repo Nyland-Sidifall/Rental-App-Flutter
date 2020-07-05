@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterrentalapp/Models/AppConstants.dart';
 import 'package:flutterrentalapp/Models/posting_objects.dart';
 import 'package:flutterrentalapp/Models/review_objects.dart';
 import 'package:flutterrentalapp/Screens/book_posting_page.dart';
@@ -66,7 +67,9 @@ class _view_posting_page_state extends State<view_posting_page> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              AppConstants.currentUser.addSavedPosting(this._posting);
+            },
           ),
         ],
       ),
@@ -291,7 +294,7 @@ class _view_posting_page_state extends State<view_posting_page> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
-                    child: review_form(),
+                    child: review_form(posting: this._posting,),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),

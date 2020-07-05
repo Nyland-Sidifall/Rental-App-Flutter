@@ -20,19 +20,31 @@ class _account_page_state extends State<account_page> {
   String _hostingTitle = 'To Host Dashboard';
 
   void _changeHosting(){
-    if(AppConstants.currentUser.isCurrentlyHosting){
-      AppConstants.currentUser.isCurrentlyHosting = false;
-      Navigator.pushNamed(
-        context,
-        guest_home_page.routeName,
-      );
-    } else {
-      AppConstants.currentUser.isCurrentlyHosting = true;
-      Navigator.pushNamed(
-        context,
-        host_home_page.routeName,
-      );
+    if(AppConstants.currentUser.isHost){
+      if(AppConstants.currentUser.isCurrentlyHosting){
+        AppConstants.currentUser.isCurrentlyHosting = false;
+        Navigator.pushNamed(
+          context,
+          guest_home_page.routeName,
+        );
+      } else {
+        AppConstants.currentUser.isCurrentlyHosting = true;
+        Navigator.pushNamed(
+          context,
+          host_home_page.routeName,
+        );
+      }
+    }else{
+      AppConstants.currentUser.becomeHost().whenComplete((){
+        AppConstants.currentUser.isCurrentlyHosting = true;
+        Navigator.pushNamed(
+          context,
+          host_home_page.routeName,
+        );
+      });
     }
+
+
 
   }
 
@@ -42,11 +54,16 @@ class _account_page_state extends State<account_page> {
 
   @override
   void initState() {
-    if (AppConstants.currentUser.isCurrentlyHosting) {
-      _hostingTitle = 'To Guest Dashboard';
+    if(AppConstants.currentUser.isHost){
+      if (AppConstants.currentUser.isCurrentlyHosting) {
+        _hostingTitle = 'To Guest Dashboard';
+      }else{
+        _hostingTitle = 'To Host Dashboard';
+      }
     }else{
-      _hostingTitle = 'To Host Dashboard';
+      _hostingTitle = 'Become a host';
     }
+
     super.initState();
   }
 
@@ -91,13 +108,12 @@ class _account_page_state extends State<account_page> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
+
                         ),
                       ),
                       AutoSizeText(
                         AppConstants.currentUser.email,
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                        minFontSize: 15,
                       ),
                     ],
                   ),
